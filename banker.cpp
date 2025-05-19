@@ -1,44 +1,49 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <string>
 #include <sstream>
 using namespace std;
 
 int main() {
-    ifstream fin("banker.inp");
-    ofstream fout("banker.out");
     int n, m;
-    fin >> n >> m;
+    cin >> n >> m;
     vector<int> total(m), available(m);
-    for (int i = 0; i < m; i++) fin >> total[i];
-    vector<vector<int>> max(n, vector<int>(m)), allocation(n, vector<int>(m)), need(n, vector<int>(m));
-    string line;
-    getline(fin, line);
-    getline(fin, line);
+    for (int i = 0; i < m; i++)
+        cin >> total[i];
+
+    vector<vector<int>> maxReq(n, vector<int>(m));
+    vector<vector<int>> allocation(n, vector<int>(m));
+    vector<vector<int>> need(n, vector<int>(m));
+
     for (int i = 0; i < n; i++)
         for (int j = 0; j < m; j++)
-            fin >> max[i][j];
-    getline(fin, line);
-    getline(fin, line);
-    for (int i = 0; i < n; i++)
+            cin >> maxReq[i][j];
+
+    for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            fin >> allocation[i][j];
-            need[i][j] = max[i][j] - allocation[i][j];
+            cin >> allocation[i][j];
+            need[i][j] = maxReq[i][j] - allocation[i][j];
             available[j] += allocation[i][j];
         }
+    }
+
     for (int j = 0; j < m; j++)
         available[j] = total[j] - available[j];
 
-    while (getline(fin, line)) {
+    cin.ignore();
+    string line;
+    while (getline(cin, line)) {
         istringstream iss(line);
         string cmd;
         iss >> cmd;
-        if (cmd == "quit") break;
+        if (cmd == "quit")
+            break;
         int pid;
         iss >> pid;
         vector<int> req(m);
-        for (int i = 0; i < m; i++) iss >> req[i];
+        for (int i = 0; i < m; i++)
+            iss >> req[i];
+
         if (cmd == "request") {
             bool invalid = false;
             for (int i = 0; i < m; i++)
@@ -61,8 +66,9 @@ int main() {
                     }
                     vector<bool> finish(n, false);
                     vector<int> work = available;
-                    while (true) {
-                        bool done = false;
+                    bool progress;
+                    do {
+                        progress = false;
                         for (int i = 0; i < n; i++) {
                             if (!finish[i]) {
                                 bool canFinish = true;
@@ -75,13 +81,12 @@ int main() {
                                     for (int j = 0; j < m; j++)
                                         work[j] += allocation[i][j];
                                     finish[i] = true;
-                                    done = true;
+                                    progress = true;
                                 }
                             }
                         }
-                        if (!done) break;
-                    }
-                    for (bool f : finish)
+                    } while (progress);
+                    for (bool f : finish) {
                         if (!f) {
                             for (int i = 0; i < m; i++) {
                                 available[i] += req[i];
@@ -90,6 +95,7 @@ int main() {
                             }
                             break;
                         }
+                    }
                 }
             }
         }
@@ -100,7 +106,9 @@ int main() {
                 available[i] += req[i];
             }
         }
-        for (int i = 0; i < m; i++) fout << available[i] << (i == m - 1 ? '\n' : ' ');
+
+        for (int i = 0; i < m; i++)
+            cout << available[i] << (i == m - 1 ? '\n' : ' ');
     }
     return 0;
 }
