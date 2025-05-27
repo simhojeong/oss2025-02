@@ -1,0 +1,28 @@
+//부프로그램을 매개변수로 허용하는 경우
+//허용하지 않았을때
+
+double integral(int op, double a, double b) {
+    double sum = 0, h = (b - a) / 1000;
+    for (int i = 0; i < 1000; i++) {
+        double x = a + i * h;
+        if (op == 1)
+            sum += x * h;           // f1(x)=x
+        else
+            sum += x*x * h;         // f2(x)=x^2
+    }
+    return sum;
+}
+
+//허용했을떄 
+double integral(double (*f)(double), double a, double b) {
+    double sum = 0, h = (b - a) / 1000;
+    for (int i = 0; i < 1000; i++)
+        sum += f(a + i*h) * h;
+    return sum;
+}
+
+double f1(double x) { return x; }
+double f2(double x) { return x*x; }
+
+printf("%f\n", integral(f1, 0.0, 1.0));
+printf("%f\n", integral(f2, 0.0, 1.0));
