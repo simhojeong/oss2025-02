@@ -1,0 +1,25 @@
+//클로저를 허용하는 경우
+
+//허용하지 않을때
+
+class Counter {
+    private int count = 0;
+    public int next() {
+        return ++count;
+    }
+}
+
+Counter c = new Counter();
+System.out.println(c.next());  // 1
+System.out.println(c.next());  // 2
+
+//허용할때 
+
+
+function makeAdder(x) {
+  return function(y) { return x + y; };
+}
+
+const add10 = makeAdder(10);
+console.log(add10(5));   // 15
+console.log(add10(20));  // 30
