@@ -1,0 +1,25 @@
+//코루틴을 허용하는 경우
+
+// 허용하지 않을때
+
+
+class FibObj:
+    def __init__(self):
+        self.a, self.b = 0, 1
+    def next(self):
+        self.a, self.b = self.b, self.a + self.b
+        return self.a
+
+f = FibObj()
+print(f.next(), f.next(), f.next())
+
+
+//허용할때
+def fib():
+    a, b = 0, 1
+    while True:
+        a, b = b, a + b
+        yield a
+
+g = fib()
+print(next(g), next(g), next(g), next(g))
