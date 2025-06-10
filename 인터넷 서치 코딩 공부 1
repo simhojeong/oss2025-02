@@ -1,0 +1,19 @@
+import webbrowser
+from googletrans import Translator
+
+def youtube_search_kor_to_eng():
+    translator = Translator()
+    
+    query_kor = input("유튜브에서 검색할 한글 키워드를 입력하세요: ")
+    
+    # 한글 → 영어 번역
+    translated = translator.translate(query_kor, src='ko', dest='en')
+    query_eng = translated.text
+
+    print(f"번역된 검색어: {query_eng}")
+
+    # 유튜브 검색 URL 열기
+    search_url = f"https://www.youtube.com/results?search_query={query_eng}"
+    webbrowser.open(search_url)
+
+youtube_search_kor_to_eng()
