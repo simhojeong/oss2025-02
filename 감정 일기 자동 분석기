@@ -1,0 +1,28 @@
+from transformers import pipeline
+from datetime import datetime
+import os
+
+# 감정 분석 파이프라인 (HuggingFace의 사전학습 모델 사용)
+emotion_classifier = pipeline("sentiment-analysis")
+
+def analyze_emotion():
+    print("오늘 감정을 자유롭게 적어보세요. (한글로도 가능):")
+    entry = input("> ")
+    
+    # 감정 분석
+    result = emotion_classifier(entry)[0]
+    label = result['label']
+    score = result['score']
+
+    # 출력
+    print(f"분석 결과: 감정 = {label}, 신뢰도 = {round(score * 100, 2)}%")
+    
+    if label.lower() == 'negative' and score > 0.8:
+        print("⚠️ 우울감 또는 스트레스가 감지되었습니다. 전문가 상담을 고려해보세요.")
+    
+    # 일기 저장
+    today = datetime.now().strftime("%Y-%m-%d")
+    with open(f"emotion_diary_{today}.txt", "a", encoding='utf-8') as f:
+        f.write(f"[{today}] {entry}\n결과: {label} ({round(score * 100, 2)}%)\n\n")
+
+analyze_emotion()
