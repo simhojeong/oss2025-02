@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+struct Subject {
+    string name;
+    int score;
+    double recommended_hours;
+};
+
+int main() {
+    int n;
+    cout << "과목 수를 입력하세요: ";
+    cin >> n;
+
+    vector<Subject> subjects(n);
+    int total_inverse_score = 0;
+
+    for (int i = 0; i < n; i++) {
+        cout << i + 1 << "번째 과목 이름: ";
+        cin >> subjects[i].name;
+        cout << "해당 과목 점수(0~100): ";
+        cin >> subjects[i].score;
+
+        // 점수가 낮을수록 더 많은 학습 시간 추천
+        int inverse = 100 - subjects[i].score;
+        if (inverse < 1) inverse = 1;
+        total_inverse_score += inverse;
+        subjects[i].recommended_hours = inverse; // 임시 저장
+    }
+
+    cout << "\n[추천 학습 시간 분배 결과]\n";
+    for (int i = 0; i < n; i++) {
+        subjects[i].recommended_hours = (subjects[i].recommended_hours / total_inverse_score) * 20; // 총 20시간 분배 기준
+        cout << setw(10) << subjects[i].name << " : "
+             << fixed << setprecision(2)
+             << subjects[i].recommended_hours << " 시간 추천\n";
+    }
+
+    return 0;
+}
